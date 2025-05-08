@@ -1,23 +1,28 @@
+// app/_layout.jsx
 import { Stack } from "expo-router";
+import React from "react";
 
-const RootLayout = () => {
+export default function RootLayout() {
   return (
     <Stack
+      // these options apply to every screen in this navigator
       screenOptions={{
-        headerStyle: {
-          backgroundColor: "#ff8c00",
-        },
+        headerStyle: { backgroundColor: "#ff8c00" },
         headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontSize: 20,
-          fontWeight: "bold",
-        },
+        headerTitleStyle: { fontSize: 20, fontWeight: "bold" },
+        // you can tweak more defaults here…
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Home" }} />
-      <Stack.Screen name="about" options={{ headerTitle: "About" }} />
+      {/* 
+        By default Expo Router will auto‑register:
+        • app/index.jsx  → name="index"
+        • app/about/index.jsx → name="about"
+        
+        If you want to override titles, icons, etc, you can
+        explicitly list them here:
+      */}
+      <Stack.Screen name="index" options={{ title: "My Dashboard" }} />
+      <Stack.Screen name="about" options={{ title: "About This App" }} />
     </Stack>
   );
-};
-
-export default RootLayout;
+}

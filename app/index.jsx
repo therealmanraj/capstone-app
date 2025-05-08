@@ -1,51 +1,41 @@
-import { useRouter } from "expo-router";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import reactLogo from "../assets/images/react-logo.png";
+// app/index.jsx
+import React from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import AppointmentList from "../components/AppointmentList";
+import useAppointments from "../hooks/useAppointments";
+
+export default function DashboardPage() {
+  const { appointments, loading, error } = useAppointments();
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.greeting}>Welcome, Dr. Smith</Text>
+
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : error ? (
+        <Text style={styles.error}>Failed to load appointments.</Text>
+      ) : (
+        <AppointmentList data={appointments} />
+      )}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#f2f2f2",
+    padding: 16,
   },
-  image: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+  greeting: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
   },
-  text: {
-    fontSize: 18,
+  error: {
+    color: "red",
     textAlign: "center",
-    marginBottom: 20,
-    paddingHorizontal: 20,
-  },
-  button: {
-    backgroundColor: "#ff8c00",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
+    marginTop: 20,
   },
 });
-
-const Index = () => {
-  const router = useRouter();
-  return (
-    <View style={styles.container}>
-      <Image source={reactLogo} style={styles.image} />
-      <Text style={styles.text}>This is a demo for the capstone.</Text>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/about")}
-      >
-        <Text style={styles.buttonText}>Go to About</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-export default Index;
