@@ -2,6 +2,7 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Button,
   KeyboardAvoidingView,
   Platform,
@@ -10,24 +11,53 @@ import {
   TextInput,
 } from "react-native";
 
+const SERVER_URL = "http://localhost:3000"; // or your ngrok / LAN URL
+
 export default function Login() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = () => {
-    // 👇 replace with real auth
-    if (user === "admin" && pass === "password") {
-      router.replace("/dashboard");
-    } else {
-      alert("Invalid credentials");
+  const handleLogin = async () => {
+    if (!user || !pass) {
+      return Alert.alert(
+        "Missing fields",
+        "Please enter both username and password."
+      );
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${SERVER_URL}/api/doctors/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: user, password: pass }),
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Invalid credentials");
+        throw new Error("Login failed, please try again");
+      }
+
+      const doctor = await res.json();
+      // Optionally persist doctor data here (AsyncStorage / context)
+      // Navigate to dashboard, passing doctorId:
+      router.replace({
+        pathname: "/dashboard",
+        params: { doctorId: doctor.id },
+      });
+    } catch (err) {
+      Alert.alert("Login Error", err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.select({ ios: "padding", android: null })}
+      behavior={Platform.select({ ios: "padding", android: undefined })}
     >
       <Text style={styles.title}>Welcome back</Text>
       <TextInput
@@ -44,7 +74,10 @@ export default function Login() {
         secureTextEntry
         style={styles.input}
       />
-      <Button title="Log in" onPress={handleLogin} />
+      <Button
+        title={loading ? "Logging in…" : "Log in"}
+        onPress={handleLogin}
+      />
     </KeyboardAvoidingView>
   );
 }

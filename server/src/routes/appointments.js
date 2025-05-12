@@ -15,13 +15,30 @@ router.get("/", async (req, res) => {
   if (patientId) filter.patientId = patientId;
 
   try {
-    const appts = await Appointment.find(filter).sort({ scheduledAt: 1 });
+    const appts = await Appointment.find(filter)
+      .sort({ scheduledAt: 1 })
+      .populate("patientId", "firstName lastName");
     res.json(appts);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// router.get("/", async (req, res) => {
+//   const { doctorId, patientId } = req.query;
+//   const filter = {};
+//   if (doctorId) filter.doctorId = doctorId;
+//   if (patientId) filter.patientId = patientId;
+
+//   try {
+//     const appts = await Appointment.find(filter).sort({ scheduledAt: 1 });
+//     res.json(appts);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
 
 /**
  * GET /api/appointments/:id
