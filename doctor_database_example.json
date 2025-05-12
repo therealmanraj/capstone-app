@@ -1,0 +1,28 @@
+{
+  "doctor_id": "001",
+  "doctor_password": "password",
+  "doctor_first_name": "John",
+  "doctor_last_name": "Doe",
+  "doctor_specialty": "Cardiology",
+  "doctor_office": "A234",
+  "doctor_patient_list": [
+    {
+      "patient_id": "P001",
+      "patient_first_name": "Alice",
+      "patient_last_name": "Smith",
+      "patient_age": 30,
+      "patient_medical_history": [
+        {
+          "condition": "Hypertension",
+          "treatment": "Medication A",
+          "date": "2023-01-15"
+        },
+        {
+          "condition": "Diabetes",
+          "treatment": "Insulin",
+          "date": "2023-02-20"
+        }
+      ]
+    }
+  ]
+}
