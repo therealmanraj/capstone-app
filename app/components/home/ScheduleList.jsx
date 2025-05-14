@@ -1,14 +1,15 @@
 // components/home/ScheduleList.jsx
-import { useRouter } from "expo-router";
 import React from "react";
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import ScheduleItem from "./ScheduleItem";
 
 export default function ScheduleList({ data }) {
   const router = useRouter();
 
-  if (!data.length)
+  if (!data.length) {
     return <Text style={styles.empty}>No appointments today.</Text>;
+  }
 
   return (
     <View>

@@ -1,3 +1,4 @@
+// server/src/routes/appointments.js
 import { Router } from "express";
 import Appointment from "../../models/Appointment.js";
 

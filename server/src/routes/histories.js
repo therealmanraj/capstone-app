@@ -1,3 +1,4 @@
+// server/src/routes/histories.js
 import { Router } from "express";
 import PatientHistory from "../../models/PatientHistory.js";
 

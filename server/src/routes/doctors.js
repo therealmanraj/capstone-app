@@ -1,3 +1,4 @@
+// server/src/routes/doctors.js
 import { Router } from "express";
 import Doctor from "../../models/Doctor.js";
 

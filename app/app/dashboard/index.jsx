@@ -1,20 +1,13 @@
 // app/dashboard/index.jsx
+import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import ScheduleItem from "../../components/home/ScheduleItem";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import SearchHeader from "../../components/home/SearchHeader";
+import ScheduleList from "../../components/home/ScheduleList";
 import useDashboard from "../../hooks/useDashboard";
 import { COLORS } from "../../theme";
 
 export default function Dashboard() {
-  // grab doctorId from the login redirect: /dashboard?doctorId=...
   const { doctorId } = useLocalSearchParams();
   const { data, loading, error } = useDashboard(doctorId);
   const [search, setSearch] = useState("");
@@ -33,12 +26,11 @@ export default function Dashboard() {
     );
 
   const { doctor, schedule } = data;
+
+  // filter by the single `patient` string
   const filtered = schedule.filter((evt) =>
-    `${evt.patientFirstName} ${evt.patientLastName}`
-      .toLowerCase()
-      .includes(search.toLowerCase())
+    evt.patient.toLowerCase().includes(search.toLowerCase())
   );
-  console.log("filtered", filtered);
 
   return (
     <View style={styles.container}>
@@ -50,24 +42,7 @@ export default function Dashboard() {
 
       <Text style={styles.heading}>My Patients • {filtered.length} today</Text>
 
-      <FlatList
-        data={filtered}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <ScheduleItem
-            time={new Date(item.scheduledAt).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-            patient={`${item.patientFirstName} ${item.patientLastName}`}
-            onPress={() => console.log("go to:", item._id)}
-          />
-        )}
-        ListEmptyComponent={() => (
-          <Text style={styles.empty}>No appointments today.</Text>
-        )}
-        contentContainerStyle={{ paddingBottom: 16 }}
-      />
+      <ScheduleList data={filtered} />
     </View>
   );
 }
@@ -89,10 +64,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 12,
   },
-  error: { color: "red" },
-  empty: {
+  error: {
+    color: "red",
     textAlign: "center",
-    color: "#777",
-    marginTop: 24,
   },
 });

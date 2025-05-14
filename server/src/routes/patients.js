@@ -1,3 +1,4 @@
+// server/src/routes/patients.js
 import { Router } from "express";
 import Patient from "../../models/Patient.js";
 
