@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "react-native";
 
-const SERVER_URL = "http://localhost:3000"; // or your ngrok / LAN URL
+const SERVER_URL = "http://localhost:3000";
 
 export default function Login() {
   const [user, setUser] = useState("");
@@ -26,7 +26,6 @@ export default function Login() {
         "Please enter both username and password."
       );
     }
-
     setLoading(true);
     try {
       const res = await fetch(`${SERVER_URL}/api/doctors/login`, {
@@ -34,15 +33,11 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: user, password: pass }),
       });
-
       if (!res.ok) {
         if (res.status === 401) throw new Error("Invalid credentials");
-        throw new Error("Login failed, please try again");
+        throw new Error("Login failed");
       }
-
       const doctor = await res.json();
-      // Optionally persist doctor data here (AsyncStorage / context)
-      // Navigate to dashboard, passing doctorId:
       router.replace({
         pathname: "/dashboard",
         params: { doctorId: doctor.id },
@@ -83,11 +78,7 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
-  },
+  container: { flex: 1, justifyContent: "center", padding: 24 },
   title: {
     fontSize: 28,
     fontWeight: "700",
