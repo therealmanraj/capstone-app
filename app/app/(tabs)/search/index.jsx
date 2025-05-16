@@ -1,4 +1,4 @@
-// app/search/index.jsx
+// app/app/(tabs)/search/index.jsx
 import React, { useCallback } from "react";
 import { View, Text, Button, StyleSheet, Alert } from "react-native";
 

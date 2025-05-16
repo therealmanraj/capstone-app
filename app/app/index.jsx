@@ -1,6 +1,6 @@
-// app/index.jsx
+// app/app/index.jsx
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Alert,
   Button,
@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
 } from "react-native";
+import { AuthContext } from "../context/AuthContext";
 
 const SERVER_URL = "http://localhost:3000";
 
@@ -18,6 +19,7 @@ export default function Login() {
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
     if (!user || !pass) {
@@ -38,10 +40,13 @@ export default function Login() {
         throw new Error("Login failed");
       }
       const doctor = await res.json();
-      router.replace({
-        pathname: "/dashboard",
-        params: { doctorId: doctor.id },
-      });
+
+      // router.replace({
+      //   pathname: "/dashboard",
+      //   params: { doctorId: doctor.id },
+      // });
+      await login(doctor);
+      router.replace("/dashboard"); // no params needed any more
     } catch (err) {
       Alert.alert("Login Error", err.message);
     } finally {

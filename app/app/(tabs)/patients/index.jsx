@@ -1,4 +1,4 @@
-// app/patients/index.jsx
+// app/app/(tabs)/patients/index.jsx
 import React, { useCallback } from "react";
 import { View, Text, Button, StyleSheet, Alert } from "react-native";
 

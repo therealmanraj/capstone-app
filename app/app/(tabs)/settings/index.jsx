@@ -1,4 +1,4 @@
-// app/settings/index.jsx
+// app/app/(tabs)/settings/index.jsx
 
 import React, { useCallback } from "react";
 import { View, Text, Button, StyleSheet, Alert } from "react-native";
