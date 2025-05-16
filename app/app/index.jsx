@@ -1,6 +1,6 @@
-// app/index.jsx
+// app/app/index.jsx
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Alert,
   Button,
@@ -10,14 +10,16 @@ import {
   Text,
   TextInput,
 } from "react-native";
+import { AuthContext } from "../context/AuthContext";
 
-const SERVER_URL = "http://localhost:3000"; // or your ngrok / LAN URL
+const SERVER_URL = "http://localhost:3000";
 
 export default function Login() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
     if (!user || !pass) {
@@ -26,7 +28,6 @@ export default function Login() {
         "Please enter both username and password."
       );
     }
-
     setLoading(true);
     try {
       const res = await fetch(`${SERVER_URL}/api/doctors/login`, {
@@ -34,19 +35,18 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: user, password: pass }),
       });
-
       if (!res.ok) {
         if (res.status === 401) throw new Error("Invalid credentials");
-        throw new Error("Login failed, please try again");
+        throw new Error("Login failed");
       }
-
       const doctor = await res.json();
-      // Optionally persist doctor data here (AsyncStorage / context)
-      // Navigate to dashboard, passing doctorId:
-      router.replace({
-        pathname: "/dashboard",
-        params: { doctorId: doctor.id },
-      });
+
+      // router.replace({
+      //   pathname: "/dashboard",
+      //   params: { doctorId: doctor.id },
+      // });
+      await login(doctor);
+      router.replace("/dashboard"); // no params needed any more
     } catch (err) {
       Alert.alert("Login Error", err.message);
     } finally {
@@ -83,11 +83,7 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
-  },
+  container: { flex: 1, justifyContent: "center", padding: 24 },
   title: {
     fontSize: 28,
     fontWeight: "700",

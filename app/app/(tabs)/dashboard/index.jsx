@@ -1,3 +1,4 @@
+// app/app/(tabs)/dashboard/index.jsx
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import {
@@ -10,12 +11,12 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import AppointmentCard from "../../components/home/AppointmentCard";
-import useDashboard from "../../hooks/useDashboard";
-import { COLORS } from "../../theme";
+import AppointmentCard from "../../../components/home/AppointmentCard";
+import useDashboard from "../../../hooks/useDashboard";
+import { COLORS } from "../../../theme";
 
 // logo + sizing constants (same as before)
-const LOGO = require("../../assets/images/vchLogo.webp");
+const LOGO = require("../../../assets/images/vchLogo.webp");
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 const LOGO_WIDTH = SCREEN_W * 0.6;
 const LOGO_HEIGHT = LOGO_WIDTH * (48 / 160);
