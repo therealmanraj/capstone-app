@@ -1,5 +1,8 @@
 // services/dashboard.js
-const SERVER_URL = "http://localhost:3000"; // point to your Express server
+const SERVER_URL = "http://localhost:3000";
+
+// ⚠️ for development, fix "today" to April 4, 2025:
+const DEV_TODAY = new Date(2025, 3, 4);
 
 export async function getDashboardData(doctorId) {
   // 1) Fetch doctor profile
@@ -12,15 +15,20 @@ export async function getDashboardData(doctorId) {
     `${SERVER_URL}/api/appointments?doctorId=${doctorId}`
   );
   if (!apptRes.ok) throw new Error("Failed to load appointments");
-  const raw = await apptRes.json();
 
-  // 3) Filter to “today” only
-  const start = new Date();
+  const raw = await fetch(
+    `${SERVER_URL}/api/appointments?doctorId=${doctorId}`
+  ).then((r) => {
+    if (!r.ok) throw new Error("Failed to load appointments");
+    return r.json();
+  });
+
+  // define our day window based on DEV_TODAY
+  const start = new Date(DEV_TODAY);
   start.setHours(0, 0, 0, 0);
-  const end = new Date();
+  const end = new Date(DEV_TODAY);
   end.setHours(23, 59, 59, 999);
 
-  // 4) Map into ready‑to‑show shape
   const schedule = raw
     .filter((a) => {
       const d = new Date(a.scheduledAt);

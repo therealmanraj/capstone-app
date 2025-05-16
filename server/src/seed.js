@@ -65,7 +65,7 @@ async function seed() {
       await Appointment.create({
         doctorId: doc._id,
         patientId: pat._id,
-        scheduledAt: new Date(2025, 4, 10 + i, 9 + i, 0, 0),
+        scheduledAt: new Date(2025, 3, 4, 9 + i, 0, 0),
         type: i % 2 === 0 ? "AKI-Followup" : "Dialysis",
         location: `Center ${String.fromCharCode(64 + i)}`,
         notes: `Auto-generated appt #${i}`,

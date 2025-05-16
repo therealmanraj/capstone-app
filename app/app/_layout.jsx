@@ -18,11 +18,6 @@ export default function RootLayout() {
         name="dashboard/index"
         options={{ title: "My Dashboard", headerShown: false }}
       />
-
-      <Stack.Screen
-        name="patients/[id]"
-        options={{ title: "Patient Details" }}
-      />
     </Stack>
   );
 }
