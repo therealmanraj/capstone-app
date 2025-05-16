@@ -1,3 +1,4 @@
+// app/app/dashboard/index.jsx
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import {
