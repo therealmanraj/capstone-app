@@ -2,37 +2,45 @@
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
   View,
-  Image,
-  SafeAreaView,
-  Dimensions,
+  Text,
   FlatList,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
+import Background from "../../../components/ui/Background";
 import AppointmentCard from "../../../components/home/AppointmentCard";
 import useDashboard from "../../../hooks/useDashboard";
 import { COLORS } from "../../../theme";
 
-// logo + sizing constants (same as before)
-const LOGO = require("../../../assets/images/vchLogo.webp");
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
-const LOGO_WIDTH = SCREEN_W * 0.6;
-const LOGO_HEIGHT = LOGO_WIDTH * (48 / 160);
-const LOGO_TOP = SCREEN_H * 0.1;
-const LOGO_LEFT = SCREEN_W * 0.05;
-const CONTENT_PADDING_TOP = LOGO_TOP + LOGO_HEIGHT + SCREEN_H * 0.02;
-const HORIZONTAL_PADDING = SCREEN_W * 0.04;
-const TOPLEFT_SIZE = SCREEN_W * 0.3;
-const BLUE_CIRCLE_SZ = SCREEN_W * 0.55;
-const GREEN_CIRCLE_SZ = SCREEN_W * 0.6;
+// match the same spacing under the logo as in Search:
+const LOGO_HEIGHT = SCREEN_W * 0.6 * (48 / 160);
+const CONTENT_TOP = SCREEN_H * 0.1 + LOGO_HEIGHT + SCREEN_H * 0.02;
+const H_PADDING = SCREEN_W * 0.04;
 
 export default function Dashboard() {
   const { doctorId } = useLocalSearchParams();
   const { data, loading, error } = useDashboard(doctorId);
 
-  // sample data, hard‐coded for now
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+  if (error || !data) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>Oops! Couldn’t load data.</Text>
+      </View>
+    );
+  }
+
+  const { doctor } = data;
+
   const appointments = [
     { id: "1", name: "Juan Pérez", age: 45, time: "10:00 AM", room: "Room 3" },
     { id: "2", name: "Ana Silva", age: 25, time: "14:00 PM", room: "Room 5" },
@@ -94,42 +102,13 @@ export default function Dashboard() {
     },
   ];
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      </View>
-    );
-  }
-  if (error || !data) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.error}>Oops! Couldn’t load data.</Text>
-      </View>
-    );
-  }
-
-  const { doctor } = data;
-
   return (
-    <SafeAreaView style={styles.container}>
-      {/* background shapes */}
-      <View style={styles.topLeftCircle} />
-      <View style={styles.circleBlue} />
-      <View style={styles.circleGreen} />
-
-      {/* logo */}
-      <View style={styles.logoWrapper}>
-        <Image source={LOGO} style={styles.logo} resizeMode="contain" />
-      </View>
-
-      {/* content */}
-      <View style={styles.content}>
+    <Background>
+      <View style={styles.container}>
         <Text style={styles.doctorName}>
           Dr. {doctor.firstName} {doctor.lastName}
         </Text>
 
-        {/* KPI placeholders row */}
         <View style={styles.kpiContainer}>
           <View style={styles.kpiCard}>
             <Text style={styles.kpiValue}>--</Text>
@@ -155,84 +134,24 @@ export default function Dashboard() {
               onPress={() => console.log("Tapped", item.id)}
             />
           )}
-          showsVerticalScrollIndicator={true}
-          style={styles.list}
           contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
         />
       </View>
-    </SafeAreaView>
+    </Background>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    overflow: "hidden",
-  },
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
-  topLeftCircle: {
-    position: "absolute",
-    width: TOPLEFT_SIZE,
-    height: TOPLEFT_SIZE,
-    borderRadius: TOPLEFT_SIZE / 2,
-    backgroundColor: "#C1D82F",
-    top: -TOPLEFT_SIZE * 0.4,
-    left: -TOPLEFT_SIZE * 0.4,
-    zIndex: 0,
-  },
-  circleBlue: {
-    position: "absolute",
-    width: BLUE_CIRCLE_SZ,
-    height: BLUE_CIRCLE_SZ,
-    borderRadius: BLUE_CIRCLE_SZ / 2,
-    backgroundColor: "#0078AE",
-    top: -BLUE_CIRCLE_SZ * 0.6,
-    right: -BLUE_CIRCLE_SZ * 0.3,
-    zIndex: 0,
-  },
-  circleGreen: {
-    position: "absolute",
-    width: GREEN_CIRCLE_SZ,
-    height: GREEN_CIRCLE_SZ,
-    borderRadius: GREEN_CIRCLE_SZ / 2,
-    backgroundColor: "#C1D82F",
-    top: SCREEN_H * 0.5 - GREEN_CIRCLE_SZ * 0.25,
-    left: -GREEN_CIRCLE_SZ * 0.4,
-    zIndex: 0,
-  },
-
-  logoWrapper: {
-    position: "absolute",
-    top: LOGO_TOP,
-    left: LOGO_LEFT,
-    width: LOGO_WIDTH,
-    height: LOGO_HEIGHT,
-    zIndex: 1,
-  },
-  logo: {
-    width: "100%",
-    height: "100%",
-  },
-  list: {
+  container: {
     flex: 1,
-    // add right padding so cards don't butt against the OS scrollbar
-    paddingRight: HORIZONTAL_PADDING,
-  },
-  listContent: {
-    paddingHorizontal: HORIZONTAL_PADDING,
-  },
-
-  content: {
-    flex: 1,
-    paddingTop: CONTENT_PADDING_TOP,
-    paddingHorizontal: HORIZONTAL_PADDING,
-    zIndex: 2,
+    paddingTop: CONTENT_TOP,
+    paddingHorizontal: H_PADDING,
   },
   doctorName: {
     fontSize: 18,
@@ -240,8 +159,6 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 12,
   },
-
-  /* ← NEW: KPI row styles → */
   kpiContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -253,13 +170,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginHorizontal: 4,
-    // subtle shadow
+    alignItems: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 2,
     elevation: 2,
-    alignItems: "center",
   },
   kpiValue: {
     fontSize: 20,
@@ -271,15 +187,15 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginTop: 4,
   },
-  /* ← END KPI → */
-
   subheading: {
     fontSize: 20,
     fontWeight: "bold",
     color: COLORS.text,
     marginBottom: 12,
   },
-
+  listContent: {
+    paddingBottom: 32,
+  },
   error: {
     color: "red",
     textAlign: "center",
