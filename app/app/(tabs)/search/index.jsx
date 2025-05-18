@@ -1,4 +1,3 @@
-// app/app/(tabs)/search/index.jsx
 import React, { useState } from "react";
 import {
   View,
@@ -16,19 +15,15 @@ import { COLORS } from "../../../theme";
 import FilterModal from "../../../components/ui/FilterModal";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
-// same top‐padding under logo as Dashboard
 const LOGO_H = SCREEN_W * 0.6 * (48 / 160);
 const CONTENT_TOP = SCREEN_H * 0.1 + LOGO_H + SCREEN_H * 0.02;
 const H_PADDING = SCREEN_W * 0.04;
 
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState(2); // dummy starting count
-
-  const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
 
-  // dummy patient data:
   const patients = Array.from({ length: 21 }).map((_, i) => ({
     id: String(i + 1),
     name: "Mario Mattos",
@@ -57,12 +52,13 @@ export default function SearchScreen() {
         {/* Heading */}
         <Text style={styles.heading}>Patients</Text>
 
-        {/* 3-column grid */}
+        {/* Patient grid */}
         <FlatList
           data={patients}
           keyExtractor={(item) => item.id}
           numColumns={3}
           showsVerticalScrollIndicator={Platform.OS === "web"}
+          contentContainerStyle={styles.grid}
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Ionicons
@@ -96,7 +92,7 @@ export default function SearchScreen() {
 
           <TouchableOpacity
             style={styles.clearBtn}
-            onPress={() => setFilters(0)}
+            onPress={() => setActiveFilters({})}
           >
             <Text style={styles.clearBtnText}>Clear Filters</Text>
           </TouchableOpacity>
@@ -134,6 +130,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: COLORS.text,
     marginBottom: 12,
+  },
+  grid: {
+    paddingBottom: 24,
   },
   card: {
     flex: 1 / 3,

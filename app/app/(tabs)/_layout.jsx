@@ -10,8 +10,8 @@ export default function TabsLayout() {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Slot /> {/* ← renders Dashboard, Search, Patients or Settings */}
+        <NavBar /> {/* ← your bottom nav */}
       </View>
-      <NavBar /> {/* ← your bottom nav */}
     </SafeAreaView>
   );
 }

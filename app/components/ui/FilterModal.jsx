@@ -1,3 +1,4 @@
+// components/ui/FilterModal.jsx
 import React, { useState } from "react";
 import {
   Modal,
@@ -8,147 +9,159 @@ import {
   StyleSheet,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Slider from "@react-native-community/slider"; // expo install @react-native-community/slider
 import { COLORS } from "../../theme";
 
-export default function FilterModal({
-  visible,
-  onClose,
-  onApply,
-  onReset,
-  initialFilters = {},
-}) {
-  const [datePreset, setDatePreset] = useState(null); // "week" | "month" | "custom"
+export default function FilterModal({ visible, onClose, onApply, onReset }) {
+  const [datePreset, setDatePreset] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [kidgo, setKidgo] = useState("Moderate"); // Low, Moderate, High, Very High
-  const [creatinine, setCreatinine] = useState(0.5);
-  const [lactate, setLactate] = useState(0.5);
+
+  const [kidgo, setKidgo] = useState("Moderate");
+  const [creMin, setCreMin] = useState(null);
+  const [creMax, setCreMax] = useState(null);
+  const [lacMin, setLacMin] = useState(null);
+  const [lacMax, setLacMax] = useState(null);
 
   const handleApply = () => {
-    onApply({ datePreset, startDate, endDate, kidgo, creatinine, lactate });
+    onApply({
+      datePreset,
+      startDate,
+      endDate,
+      kidgo,
+      creMin,
+      creMax,
+      lacMin,
+      lacMax,
+    });
     onClose();
   };
-
   const handleReset = () => {
     setDatePreset(null);
     setStartDate(null);
     setEndDate(null);
     setKidgo("Moderate");
-    setCreatinine(0.5);
-    setLactate(0.5);
+    setCreMin(null);
+    setCreMax(null);
+    setLacMin(null);
+    setLacMax(null);
     onReset();
   };
+
+  const renderChip = (label, onPress) => (
+    <View style={styles.chip}>
+      <Text style={styles.chipText}>{label}</Text>
+      <TouchableOpacity onPress={onPress} style={styles.chipClose}>
+        <Ionicons name="close-circle" size={18} color="#666" />
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <Modal
       visible={visible}
+      transparent
       animationType="slide"
-      transparent={true}
       onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.scroll}>
-            {/* Close button */}
             <TouchableOpacity style={styles.close} onPress={onClose}>
-              <Ionicons name="close" size={24} color="#444" />
+              <Ionicons name="close" size={28} color="#444" />
             </TouchableOpacity>
 
-            {/* Date */}
-            <Text style={styles.sectionTitle}>Date</Text>
-            <View style={styles.presetRow}>
-              {["week", "month", "custom"].map((p) => (
-                <TouchableOpacity
-                  key={p}
-                  style={[
-                    styles.presetBtn,
-                    datePreset === p && styles.presetBtnActive,
-                  ]}
-                  onPress={() => setDatePreset(p)}
-                >
-                  <Text
+            {/* --- Date Section --- */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Date</Text>
+              <View style={styles.controls}>
+                {["week", "month", "custom"].map((p) => (
+                  <TouchableOpacity
+                    key={p}
                     style={[
-                      styles.presetLabel,
-                      datePreset === p && styles.presetLabelActive,
+                      styles.presetBtn,
+                      datePreset === p && styles.presetBtnActive,
                     ]}
+                    onPress={() => setDatePreset(p)}
                   >
-                    {p === "week"
-                      ? "Last Week"
-                      : p === "month"
-                      ? "Last Month"
-                      : "Custom"}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            {datePreset === "custom" && (
-              <View style={styles.chipRow}>
-                {["Start Date", "End Date"].map((label, i) => {
-                  const val = i === 0 ? startDate : endDate;
-                  return (
-                    <View key={i} style={styles.chip}>
-                      <Text style={styles.chipText}>{val || label}</Text>
-                      <TouchableOpacity
-                        onPress={() =>
-                          i === 0 ? setStartDate(null) : setEndDate(null)
-                        }
-                      >
-                        <Ionicons name="close-circle" size={16} color="#666" />
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
+                    <Text
+                      style={[
+                        styles.presetLabel,
+                        datePreset === p && styles.presetLabelActive,
+                      ]}
+                    >
+                      {p === "week"
+                        ? "Last Week"
+                        : p === "month"
+                        ? "Last Month"
+                        : "Custom"}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-            )}
-
-            {/* KIDGO */}
-            <Text style={styles.sectionTitle}>KIDGO Scores</Text>
-            <View style={styles.presetRow}>
-              {["Low", "Moderate", "High", "Very High"].map((lvl) => (
-                <TouchableOpacity
-                  key={lvl}
-                  style={[
-                    styles.presetBtn,
-                    kidgo === lvl && styles.presetBtnActive,
-                  ]}
-                  onPress={() => setKidgo(lvl)}
-                >
-                  <Text
-                    style={[
-                      styles.presetLabel,
-                      kidgo === lvl && styles.presetLabelActive,
-                    ]}
-                  >
-                    {lvl}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              {datePreset === "custom" && (
+                <View style={styles.controls}>
+                  {renderChip(startDate || "Start Date", () =>
+                    setStartDate(null)
+                  )}
+                  {renderChip(endDate || "End Date", () => setEndDate(null))}
+                </View>
+              )}
             </View>
 
-            {/* Creatinine */}
-            <Text style={styles.sectionTitle}>Creatinine</Text>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={1}
-              value={creatinine}
-              onValueChange={setCreatinine}
-            />
+            {/* --- KIDGO Section --- */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>KIDGO Scores</Text>
+              <View style={styles.controls}>
+                {["Low", "Moderate", "High", "Very High"].map((lvl) => (
+                  <TouchableOpacity
+                    key={lvl}
+                    style={[
+                      styles.presetBtn,
+                      kidgo === lvl && styles.presetBtnActive,
+                    ]}
+                    onPress={() => setKidgo(lvl)}
+                  >
+                    <Text
+                      style={[
+                        styles.presetLabel,
+                        kidgo === lvl && styles.presetLabelActive,
+                      ]}
+                    >
+                      {lvl}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
 
-            {/* Lactate */}
-            <Text style={styles.sectionTitle}>Lactate</Text>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={1}
-              value={lactate}
-              onValueChange={setLactate}
-            />
+            {/* --- Creatinine Section --- */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Creatinine</Text>
+              <View style={styles.controls}>
+                {renderChip(creMin != null ? creMin : "Min Lactate", () =>
+                  setCreMin(null)
+                )}
+                {renderChip(creMax != null ? creMax : "Max Lactate", () =>
+                  setCreMax(null)
+                )}
+              </View>
+            </View>
+
+            {/* --- Lactate Section --- */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Lactate</Text>
+              <View style={styles.controls}>
+                {renderChip(lacMin != null ? lacMin : "Min Lactate", () =>
+                  setLacMin(null)
+                )}
+                {renderChip(lacMax != null ? lacMax : "Max Lactate", () =>
+                  setLacMax(null)
+                )}
+              </View>
+            </View>
           </ScrollView>
 
-          {/* Footer buttons */}
+          {/* --- Footer Buttons --- */}
           <View style={styles.footer}>
             <TouchableOpacity style={styles.btn} onPress={handleApply}>
               <Text style={styles.btnText}>Apply</Text>
@@ -174,69 +187,61 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   container: {
-    backgroundColor: "#fff",
+    alignSelf: "center",
+    width: "100%",
+    backgroundColor: "#EAF3FF",
     borderRadius: 16,
     maxHeight: "90%",
     overflow: "hidden",
   },
-  close: {
-    alignSelf: "flex-end",
-    padding: 12,
-  },
-  scroll: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+  close: { alignSelf: "flex-end", padding: 12 },
+  scroll: { paddingHorizontal: 16, paddingBottom: 24 },
+
+  section: {
+    flexDirection: "column",
+    marginTop: 12,
+    paddingHorizontal: 8,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 25,
     fontWeight: "700",
-    marginTop: 12,
-    marginBottom: 6,
     color: COLORS.text,
+    marginBottom: 12,
   },
-  presetRow: {
+  controls: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginBottom: 12,
   },
+
   presetBtn: {
-    paddingVertical: 6,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 6,
     backgroundColor: "#eee",
-    marginRight: 8,
+    marginRight: 5,
     marginBottom: 8,
   },
-  presetBtnActive: {
-    backgroundColor: COLORS.primary,
-  },
-  presetLabel: {
-    fontSize: 14,
-    color: "#444",
-  },
-  presetLabelActive: {
-    color: "#fff",
-  },
-  chipRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginVertical: 8,
-  },
+  presetBtnActive: { backgroundColor: COLORS.primary },
+  presetLabel: { fontSize: 12, color: "#444" },
+  presetLabelActive: { color: "#fff" },
+
   chip: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#fff",
     borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#ccc",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     marginRight: 8,
     marginBottom: 8,
   },
-  chipText: { marginRight: 4, fontSize: 14, color: "#333" },
-  slider: {
-    width: "100%",
-    height: 40,
-    marginBottom: 12,
-  },
+  chipText: { marginRight: 6, fontSize: 16, color: "#333" },
+  chipClose: { marginLeft: 4 },
+
   footer: {
     flexDirection: "row",
     borderTopWidth: StyleSheet.hairlineWidth,
@@ -244,21 +249,15 @@ const styles = StyleSheet.create({
   },
   btn: {
     flex: 1,
-    padding: 16,
+    padding: 18,
     backgroundColor: "#E8E828",
     alignItems: "center",
   },
-  btnText: {
-    fontWeight: "700",
-    color: "#222",
-    fontSize: 16,
-  },
+  btnText: { fontWeight: "700", fontSize: 18, color: "#222" },
   btnOutline: {
     backgroundColor: "#fff",
-    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderLeftWidth: 1,
     borderColor: "#ddd",
   },
-  btnOutlineText: {
-    color: COLORS.text,
-  },
+  btnOutlineText: { color: COLORS.text },
 });
