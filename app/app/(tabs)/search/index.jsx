@@ -13,6 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Background from "../../../components/ui/Background";
 import { COLORS } from "../../../theme";
+import FilterModal from "../../../components/ui/FilterModal";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 // same top‐padding under logo as Dashboard
@@ -23,6 +24,9 @@ const H_PADDING = SCREEN_W * 0.04;
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState(2); // dummy starting count
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({});
 
   // dummy patient data:
   const patients = Array.from({ length: 21 }).map((_, i) => ({
@@ -75,10 +79,20 @@ export default function SearchScreen() {
         <View style={styles.filtersRow}>
           <TouchableOpacity
             style={styles.filterBtn}
-            onPress={() => console.log("Open filters")}
+            onPress={() => setShowFilters(true)}
           >
-            <Text style={styles.filterBtnText}>({filters}) Filters</Text>
+            <Text style={styles.filterBtnText}>
+              ({Object.keys(activeFilters).length}) Filters
+            </Text>
           </TouchableOpacity>
+
+          <FilterModal
+            visible={showFilters}
+            onClose={() => setShowFilters(false)}
+            initialFilters={activeFilters}
+            onApply={(f) => setActiveFilters(f)}
+            onReset={() => setActiveFilters({})}
+          />
 
           <TouchableOpacity
             style={styles.clearBtn}
