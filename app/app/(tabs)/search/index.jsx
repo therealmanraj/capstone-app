@@ -131,9 +131,6 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 12,
   },
-  grid: {
-    paddingBottom: 24,
-  },
   card: {
     flex: 1 / 3,
     aspectRatio: 1,
@@ -154,12 +151,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 8,
-    marginBottom: 24,
+    marginBottom: 15,
   },
   filterBtn: {
     flex: 1,
     backgroundColor: "#FFEB3B",
-    paddingVertical: 14,
+    paddingVertical: 20,
     borderRadius: 8,
     marginRight: 8,
     alignItems: "center",
@@ -167,7 +164,7 @@ const styles = StyleSheet.create({
   clearBtn: {
     flex: 1,
     backgroundColor: "#FFEB3B",
-    paddingVertical: 14,
+    paddingVertical: 20,
     borderRadius: 8,
     marginLeft: 8,
     alignItems: "center",
