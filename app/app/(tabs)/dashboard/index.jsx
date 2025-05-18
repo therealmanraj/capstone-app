@@ -120,6 +120,17 @@ export default function Dashboard() {
           </View>
         </View>
 
+        <View style={styles.kpiContainer}>
+          <View style={styles.kpiCard}>
+            <Text style={styles.kpiValue}>--</Text>
+            <Text style={styles.kpiLabel}>KIDGO Score</Text>
+          </View>
+          <View style={styles.kpiCard}>
+            <Text style={styles.kpiValue}>--</Text>
+            <Text style={styles.kpiLabel}>Urgent Cases</Text>
+          </View>
+        </View>
+
         <Text style={styles.subheading}>Today’s appointments</Text>
 
         <FlatList
@@ -192,9 +203,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.text,
     marginBottom: 12,
-  },
-  listContent: {
-    paddingBottom: 32,
   },
   error: {
     color: "red",
