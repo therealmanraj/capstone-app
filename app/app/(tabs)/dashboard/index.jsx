@@ -32,7 +32,7 @@ export default function Dashboard() {
   const { doctorId } = useLocalSearchParams();
   const { data, loading, error } = useDashboard(doctorId);
 
-  // sample data, hard-coded for now
+  // sample data, hard‐coded for now
   const appointments = [
     { id: "1", name: "Juan Pérez", age: 45, time: "10:00 AM", room: "Room 3" },
     { id: "2", name: "Ana Silva", age: 25, time: "14:00 PM", room: "Room 5" },
@@ -113,22 +113,37 @@ export default function Dashboard() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* background shapes */}
       <View style={styles.topLeftCircle} />
       <View style={styles.circleBlue} />
       <View style={styles.circleGreen} />
 
+      {/* logo */}
       <View style={styles.logoWrapper}>
         <Image source={LOGO} style={styles.logo} resizeMode="contain" />
       </View>
 
+      {/* content */}
       <View style={styles.content}>
         <Text style={styles.doctorName}>
           Dr. {doctor.firstName} {doctor.lastName}
         </Text>
+
+        {/* KPI placeholders row */}
+        <View style={styles.kpiContainer}>
+          <View style={styles.kpiCard}>
+            <Text style={styles.kpiValue}>--</Text>
+            <Text style={styles.kpiLabel}>Patients Today</Text>
+          </View>
+          <View style={styles.kpiCard}>
+            <Text style={styles.kpiValue}>--</Text>
+            <Text style={styles.kpiLabel}>Completed</Text>
+          </View>
+        </View>
+
         <Text style={styles.subheading}>Today’s appointments</Text>
 
         <FlatList
-          className="appointment-scroll"
           data={appointments}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
@@ -160,13 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  scroll: {
-    flex: 1,
-    overflow: "visible",
-  },
-  scrollContent: {
-    paddingBottom: 32,
-  },
+
   topLeftCircle: {
     position: "absolute",
     width: TOPLEFT_SIZE,
@@ -229,13 +238,54 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.text,
-    marginBottom: 4,
+    marginBottom: 12,
   },
+
+  /* ← NEW: KPI row styles → */
+  kpiContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  kpiCard: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    padding: 12,
+    marginHorizontal: 4,
+    // subtle shadow
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 2,
+    elevation: 2,
+    alignItems: "center",
+  },
+  kpiValue: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: COLORS.text,
+  },
+  kpiLabel: {
+    fontSize: 14,
+    color: COLORS.text,
+    marginTop: 4,
+  },
+  /* ← END KPI → */
+
   subheading: {
     fontSize: 20,
     fontWeight: "bold",
     color: COLORS.text,
     marginBottom: 12,
+  },
+
+  list: {
+    flex: 1,
+    paddingRight: HORIZONTAL_PADDING, // avoid touching scrollbar
+  },
+  listContent: {
+    paddingBottom: 32,
   },
 
   error: {
