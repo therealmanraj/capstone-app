@@ -1,3 +1,4 @@
+// app/app/(tabs)/search/index.jsx
 import React, { useState } from "react";
 import {
   View,
@@ -11,6 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Background from "../../../components/ui/Background";
+import PatientCard from "../../../components/ui/PatientCard";
 import { COLORS } from "../../../theme";
 import FilterModal from "../../../components/ui/FilterModal";
 
@@ -24,9 +26,13 @@ export default function SearchScreen() {
   const [activeFilters, setActiveFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
 
+  // now include age, risk, lastVisit in your dummy data:
   const patients = Array.from({ length: 21 }).map((_, i) => ({
     id: String(i + 1),
-    name: "Mario Mattos",
+    name: "John Smith",
+    age: 47,
+    risk: "Low Risk",
+    lastVisit: "2 days ago",
   }));
 
   return (
@@ -52,22 +58,20 @@ export default function SearchScreen() {
         {/* Heading */}
         <Text style={styles.heading}>Patients</Text>
 
-        {/* Patient grid */}
+        {/* 3-column grid */}
         <FlatList
           data={patients}
           keyExtractor={(item) => item.id}
-          numColumns={3}
+          numColumns={2}
           showsVerticalScrollIndicator={Platform.OS === "web"}
           contentContainerStyle={styles.grid}
           renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Ionicons
-                name="person-circle-outline"
-                size={48}
-                color={COLORS.primary}
-              />
-              <Text style={styles.cardLabel}>{item.name}</Text>
-            </View>
+            <PatientCard
+              name={item.name}
+              age={item.age}
+              risk={item.risk}
+              lastVisit={item.lastVisit}
+            />
           )}
         />
 
@@ -131,32 +135,19 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 12,
   },
-  card: {
-    flex: 1 / 3,
-    aspectRatio: 1,
-    backgroundColor: "#D1E8FF",
-    margin: H_PADDING / 4,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cardLabel: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: "600",
-    color: COLORS.text,
-    textAlign: "center",
+  grid: {
+    paddingBottom: 24,
   },
   filtersRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 8,
-    marginBottom: 15,
+    marginBottom: 24,
   },
   filterBtn: {
     flex: 1,
     backgroundColor: "#FFEB3B",
-    paddingVertical: 20,
+    paddingVertical: 14,
     borderRadius: 8,
     marginRight: 8,
     alignItems: "center",
@@ -164,7 +155,7 @@ const styles = StyleSheet.create({
   clearBtn: {
     flex: 1,
     backgroundColor: "#FFEB3B",
-    paddingVertical: 20,
+    paddingVertical: 14,
     borderRadius: 8,
     marginLeft: 8,
     alignItems: "center",
