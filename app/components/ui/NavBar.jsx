@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     height: 64,
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
+    // borderTopWidth: 1,
+    // borderTopColor: "#eee",
     backgroundColor: "#fff",
   },
   tab: {

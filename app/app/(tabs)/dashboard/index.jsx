@@ -128,6 +128,7 @@ export default function Dashboard() {
         <Text style={styles.subheading}>Today’s appointments</Text>
 
         <FlatList
+          className="appointment-scroll"
           data={appointments}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
@@ -139,8 +140,9 @@ export default function Dashboard() {
               onPress={() => console.log("Tapped", item.id)}
             />
           )}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 32 }}
+          showsVerticalScrollIndicator={true}
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
         />
       </View>
     </SafeAreaView>
@@ -158,7 +160,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
+  scroll: {
+    flex: 1,
+    overflow: "visible",
+  },
+  scrollContent: {
+    paddingBottom: 32,
+  },
   topLeftCircle: {
     position: "absolute",
     width: TOPLEFT_SIZE,
