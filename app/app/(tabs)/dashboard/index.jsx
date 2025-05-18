@@ -280,14 +280,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  list: {
-    flex: 1,
-    paddingRight: HORIZONTAL_PADDING, // avoid touching scrollbar
-  },
-  listContent: {
-    paddingBottom: 32,
-  },
-
   error: {
     color: "red",
     textAlign: "center",
