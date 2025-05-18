@@ -8,20 +8,21 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Background from "../../../components/ui/Background";
 import { COLORS } from "../../../theme";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
-// match Dashboard’s spacing under the logo:
-const LOGO_W = SCREEN_W * 0.6;
-const LOGO_H = LOGO_W * (48 / 160);
+// same top‐padding under logo as Dashboard
+const LOGO_H = SCREEN_W * 0.6 * (48 / 160);
 const CONTENT_TOP = SCREEN_H * 0.1 + LOGO_H + SCREEN_H * 0.02;
 const H_PADDING = SCREEN_W * 0.04;
 
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
+  const [filters, setFilters] = useState(2); // dummy starting count
 
   // dummy patient data:
   const patients = Array.from({ length: 21 }).map((_, i) => ({
@@ -31,7 +32,7 @@ export default function SearchScreen() {
 
   return (
     <Background>
-      <View style={styles.content}>
+      <View style={styles.container}>
         {/* Search bar */}
         <View style={styles.searchWrapper}>
           <Ionicons
@@ -58,7 +59,6 @@ export default function SearchScreen() {
           keyExtractor={(item) => item.id}
           numColumns={3}
           showsVerticalScrollIndicator={Platform.OS === "web"}
-          contentContainerStyle={styles.grid}
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Ionicons
@@ -70,13 +70,30 @@ export default function SearchScreen() {
             </View>
           )}
         />
+
+        {/* Filters row */}
+        <View style={styles.filtersRow}>
+          <TouchableOpacity
+            style={styles.filterBtn}
+            onPress={() => console.log("Open filters")}
+          >
+            <Text style={styles.filterBtnText}>({filters}) Filters</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.clearBtn}
+            onPress={() => setFilters(0)}
+          >
+            <Text style={styles.clearBtnText}>Clear Filters</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Background>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
+  container: {
     flex: 1,
     paddingTop: CONTENT_TOP,
     paddingHorizontal: H_PADDING,
@@ -104,9 +121,6 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 12,
   },
-  // grid: {
-  //   paddingBottom: 32,
-  // },
   card: {
     flex: 1 / 3,
     aspectRatio: 1,
@@ -122,5 +136,37 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.text,
     textAlign: "center",
+  },
+  filtersRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  filterBtn: {
+    flex: 1,
+    backgroundColor: "#FFEB3B",
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginRight: 8,
+    alignItems: "center",
+  },
+  clearBtn: {
+    flex: 1,
+    backgroundColor: "#FFEB3B",
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginLeft: 8,
+    alignItems: "center",
+  },
+  filterBtnText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#222",
+  },
+  clearBtnText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#222",
   },
 });
