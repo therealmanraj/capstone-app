@@ -141,8 +141,8 @@ export default function Dashboard() {
             />
           )}
           showsVerticalScrollIndicator={true}
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
         />
       </View>
     </SafeAreaView>
@@ -209,6 +209,14 @@ const styles = StyleSheet.create({
   logo: {
     width: "100%",
     height: "100%",
+  },
+  list: {
+    flex: 1,
+    // add right padding so cards don't butt against the OS scrollbar
+    paddingRight: HORIZONTAL_PADDING,
+  },
+  listContent: {
+    paddingHorizontal: HORIZONTAL_PADDING,
   },
 
   content: {

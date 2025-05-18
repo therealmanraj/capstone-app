@@ -1,3 +1,4 @@
+// components/home/AppointmentCard.jsx
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,13 +20,13 @@ export default function AppointmentCard({ name, age, time, room, onPress }) {
         </View>
       </View>
 
-      {/* Right: time and room */}
+      {/* Right: time above room */}
       <View style={styles.right}>
-        <View style={styles.detail}>
+        <View style={styles.detailRow}>
           <Ionicons name="time-outline" size={16} color={COLORS.primary} />
           <Text style={styles.detailText}>{time}</Text>
         </View>
-        <View style={styles.detail}>
+        <View style={styles.detailRow}>
           <Ionicons name="location-outline" size={16} color={COLORS.primary} />
           <Text style={styles.detailText}>{room}</Text>
         </View>
@@ -41,9 +42,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#D1E8FF",
     borderRadius: 12,
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 16,
-    marginVertical: 6,
+    marginVertical: 10,
   },
   left: {
     flexDirection: "row",
@@ -64,17 +65,20 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   right: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  detail: {
-    flexDirection: "row",
-    alignItems: "center",
+    // stack children vertically
+    flexDirection: "column",
+    alignItems: "flex-end",
     marginLeft: 16,
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    // small gap between time & room rows:
+    marginTop: 4,
   },
   detailText: {
     fontSize: 14,
     color: COLORS.primary,
-    marginLeft: 4,
+    marginLeft: 6,
   },
 });
